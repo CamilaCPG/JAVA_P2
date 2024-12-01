@@ -18,13 +18,21 @@ public class CadastroVeiculo {
         System.out.println("2. LISTAR VEÍCULO");
         System.out.println("3. ALTERAR VEÍCULO");
         System.out.println("4. EXCLUIR VEÍCULO");
-        System.out.println("5. SAIR");
+        System.out.println("5. VOLTAR");
+    }
+
+    public void exec() {
+        selecionaOpcao();
     }
 
     public void selecionaOpcao() {
+
         int opcao;
 
         Scanner sc = new Scanner(System.in);
+        Menu menu = new Menu(sc);
+        Clientes c = new Clientes(sc);
+        CadastroVeiculo cVeiculo = new CadastroVeiculo();
 
         while (true) {
             mostraMenu();
@@ -51,7 +59,8 @@ public class CadastroVeiculo {
                     break;
 
                 case 5:
-                    System.out.println("Finalizando...");
+                    System.out.println("Retornando ao menu Inicial...");
+                    menu.menu(c, cVeiculo);
                     sc.close();
                     return;
 
@@ -65,12 +74,14 @@ public class CadastroVeiculo {
     }
 
     private void incluirVeiculo(Scanner sc) {
+        String id = UUID.randomUUID().toString();
         System.out.print("Marca do veículo: ");
         String marca = sc.nextLine();
         System.out.print("Modelo do veículo: ");
         String modelo = sc.nextLine();
         double valor = 0.0;
         boolean valorValido = false;
+
         while (!valorValido) {
             System.out.print("Valor do veículo (use ponto para separar decimais): ");
             try {
@@ -85,9 +96,8 @@ public class CadastroVeiculo {
             }
         }
 
-        Veiculo veiculo = new Veiculo(marca, modelo, valor);
+        Veiculo veiculo = new Veiculo(id, marca, modelo, valor);
         veiculos.add(veiculo);
-
         salvarVeiculosNoArquivo();
         System.out.println("Veículo incluído com sucesso!");
     }
@@ -117,6 +127,8 @@ public class CadastroVeiculo {
             return;
         }
 
+        Veiculo veiculoExistente = veiculos.get(indice);
+
         System.out.print("Nova marca: ");
         String novaMarca = sc.nextLine();
         System.out.print("Novo modelo: ");
@@ -138,7 +150,12 @@ public class CadastroVeiculo {
             }
         }
 
-        Veiculo veiculoAtualizado = new Veiculo(novaMarca, novoModelo, novoValor);
+        Veiculo veiculoAtualizado = new Veiculo(
+                veiculoExistente.getIdVeiculo(),
+                novaMarca,
+                novoModelo,
+                novoValor);
+
         veiculos.set(indice, veiculoAtualizado);
 
         salvarVeiculosNoArquivo();
@@ -163,7 +180,7 @@ public class CadastroVeiculo {
     private void salvarVeiculosNoArquivo() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivos))) {
             for (Veiculo veiculo : veiculos) {
-                writer.write(
+                writer.write(veiculo.getIdVeiculo() + ";" +
                         veiculo.getMarcaVeiculo() + ";" + veiculo.getModeloVeiculo() + ";" + veiculo.getValorVeiculo());
                 writer.newLine();
             }
@@ -183,15 +200,23 @@ public class CadastroVeiculo {
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 String[] partes = linha.split(";");
-                String marca = partes[0];
-                String modelo = partes[1];
-                double valor = Double.parseDouble(partes[2]);
 
-                Veiculo veiculo = new Veiculo(marca, modelo, valor);
-                veiculos.add(veiculo);
+                if (partes.length == 4) {
+                    String id = partes[0];
+                    String marca = partes[1];
+                    String modelo = partes[2];
+                    double valor = Double.parseDouble(partes[3]);
+
+                    Veiculo veiculo = new Veiculo(id, marca, modelo, valor);
+                    veiculos.add(veiculo);
+                } else {
+                    System.out.println("Linha com formato inválido: " + linha);
+                }
             }
         } catch (IOException e) {
             System.out.println("Erro ao carregar os dados: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Erro ao converter valor numérico: " + e.getMessage());
         }
     }
 }

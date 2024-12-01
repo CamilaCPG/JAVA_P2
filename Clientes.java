@@ -11,15 +11,14 @@ public class Clientes {
 
     public void cadastrarCliente() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CLIENTE_FILE, true))) {
+            String id = UUID.randomUUID().toString(); // Gera um ID único
             System.out.println("\nDigite seu nome: ");
             String nome = scanner.nextLine();
 
             System.out.println("\nDigite seu telefone: ");
             String telefone = scanner.nextLine();
 
-            writer.write(nome + "\n");
-            writer.write(telefone + "\n");
-
+            writer.write(id + ";" + nome + ";" + telefone + "\n"); // Salva o cliente com ID
             System.out.println("\nCadastro feito com sucesso!");
         } catch (IOException e) {
             System.out.println("\nErro ao cadastrar contato. Tente novamente!");
@@ -93,11 +92,6 @@ public class Clientes {
                             telefone = scanner.nextLine();
                             break;
 
-                        /*
-                         * TODO: Fazer um CASE 4 onde irá conectar com o menu do arquivo de veículos e
-                         * fará as opções baseado nele
-                         */
-
                         default:
                             System.out.println("\nOpção inválida. Nenhuma alteração feita.");
                             break;
@@ -145,7 +139,7 @@ public class Clientes {
 
                 } else {
                     encontrado = true;
-                    removerVeiculo(nomeBusca);
+
                 }
             }
         } catch (IOException e) {

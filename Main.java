@@ -2,14 +2,12 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
+        Clientes cliente = new Clientes(sc);
+        CadastroVeiculo cVeiculo = new CadastroVeiculo();
+        Menu menu = new Menu(sc);
 
-        Clientes cliente = new Clientes(scanner);
-        Menu menu = new Menu(scanner);
-
-        menu.Menu(cliente, cadastroVeiculo);
-
-        scanner.close();
+        menu.menu(cliente, cVeiculo);
     }
 }
 

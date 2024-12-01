@@ -1,12 +1,18 @@
 public class Veiculo {
+    private String idVeiculo;
     private String marcaVeiculo;
     private String modeloVeiculo;
     private double valorVeiculo;
 
-    public Veiculo(String marca, String modelo, double valor) {
+    public Veiculo(String id, String marca, String modelo, double valor) {
+        this.idVeiculo = id;
         this.marcaVeiculo = marca;
         this.modeloVeiculo = modelo;
         this.valorVeiculo = valor;
+    }
+
+    public String getIdVeiculo() {
+        return idVeiculo;
     }
 
     public String getMarcaVeiculo() {
@@ -20,5 +26,4 @@ public class Veiculo {
     public double getValorVeiculo() {
         return valorVeiculo;
     }
-
 }

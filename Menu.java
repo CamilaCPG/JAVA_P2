@@ -1,7 +1,6 @@
-import java.io.*;
+
 import java.util.*;
 
-/* TODO: Implementar no public void Menu, além de Clientes cliente, também em relação aos Veículos */
 public class Menu {
     private final Scanner scanner;
 
@@ -9,7 +8,7 @@ public class Menu {
         this.scanner = scanner;
     }
 
-    public void Menu(Clientes cliente) {
+    public void menu(Clientes cliente, CadastroVeiculo cadastroVeiculo) {
         try (scanner) {
             int opcao;
 
@@ -43,7 +42,8 @@ public class Menu {
 
                     case 6:
                         System.out.println("\nVolte sempre!");
-                        break;
+                        scanner.close();
+                        return;
 
                     default:
                         System.out.println("\nOpção inválida. Tente novamente!");
