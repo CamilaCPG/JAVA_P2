@@ -1,4 +1,6 @@
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Clientes {
@@ -10,6 +12,11 @@ public class Clientes {
     }
 
     public void cadastrarCliente() {
+
+        LocalDateTime dataCadastro = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        String dataFormatada = dataCadastro.format(formatter);
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(CLIENTE_FILE, true))) {
             String id = UUID.randomUUID().toString(); // Gera um ID único
             System.out.println("\nDigite seu nome: ");
@@ -18,7 +25,7 @@ public class Clientes {
             System.out.println("\nDigite seu telefone: ");
             String telefone = scanner.nextLine();
 
-            writer.write(id + ";" + nome + ";" + telefone + "\n"); // Salva o cliente com ID
+            writer.write(id + ";" + nome + ";" + telefone + ";" + dataFormatada + "\n"); // Salva o cliente com ID
             System.out.println("\nCadastro feito com sucesso!");
         } catch (IOException e) {
             System.out.println("\nErro ao cadastrar contato. Tente novamente!");
